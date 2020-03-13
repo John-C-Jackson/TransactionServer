@@ -10,14 +10,14 @@ public class Lock implements LockTypes
     private Object object;                          // object being protected by lock
     private ArrayList<Transaction> holders;         // Transactions holding the object
     private LockType lockType;
-    
+
     public Lock() {}
-    
+
     public synchronized void acquire(Transaction trans, LockType lockType)
     {
         while(isConflict())
         {
-            try 
+            try
             {
                 wait();
             }
@@ -46,17 +46,17 @@ public class Lock implements LockTypes
             this.lockType.promote();
         }
     }
-    
+
     public synchronized void release(Transaction trans)
     {
         holders.remove(trans);
-        // set locktype to none -- From book pseudocode.. 
-        // not sure why we would set to none... can't there still be 
+        // set locktype to none -- From book pseudocode..
+        // not sure why we would set to none... can't there still be
         // other transactions waiting on this object?
         lockType.setNone();
         notifyAll();
     }
-    
+
     // TO-DO: implement this function
     public boolean isConflict()
     {
@@ -64,6 +64,7 @@ public class Lock implements LockTypes
         return true;
     }
     
+
     public boolean isHolder(Transaction trans)
     {
         if (holders.contains(trans))
@@ -72,5 +73,4 @@ public class Lock implements LockTypes
         }
         return false;
     }
-}   
-
+}
