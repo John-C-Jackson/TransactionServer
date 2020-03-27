@@ -15,12 +15,27 @@ import transactions.TransactionManager;
 public class TransactionClient implements Runnable
 {
     private static TransactionServerProxy serverProxy;
-    private int numberOfTransactions ;
+    public int numberOfTransactions ;
+    public static int numberOfAccounts;
+
+    public static int initialBalance ;
+    public String host;
+    public int port;
+
+    
 
 
 
     public TransactionClient()
     {
+      try
+      {
+
+      }
+      catch( Exception ex)
+      {
+        ex.printStackTrace();
+      }
 
     }
 
@@ -29,17 +44,25 @@ public class TransactionClient implements Runnable
       {
         for ( int index = 0 ; index< numberOfTransactions; index++)
         {
-            // run the run()???
+            new Thread()
+            {
+              @Override
+              public void run()
+              {
+                TransactionServerProxy transaction = new TransactionServer(host,port);
+                int transactionID = transaction.openTransaction();
+
+
+                int accountFrom = (int) Math.floor(Math.random() + numberOfAccounts)
+
+              }
+
+            }
         }
       }
 
 
-      @Override
-      public void run()
-      {
-        // assuming here we call to thread transaction proxy?
 
-      }
 
 
 
@@ -55,6 +78,11 @@ public class TransactionClient implements Runnable
       int port;
 
       public TransactionServerProxy( String host , int port)
+      {
+
+      }
+
+      public openTransaction()
       {
 
       }
