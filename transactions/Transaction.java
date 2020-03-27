@@ -1,13 +1,16 @@
 package transactions;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import transaction_server.TransactionServer;
 import locks.Lock;
+
 
 
 public class Transaction
 {
     ArrayList<Lock> locks = null;
     int transactionID;
+    StringBuffer log = new StringBuffer("");
 
 
 
@@ -23,21 +26,9 @@ public class Transaction
       return transactionID;
     }
 
-    // not sure if needed? --- i think it is .....
-    public ArrayList<Lock> getLocks()
-    {
-        return locks;
-    }
-
-    public void addLock(Lock lock)
-    {
-      locks.add(lock);
-    }
-
     // temporary skeleton code & stub return
     public int read(int accountId)
     {
-        return 0;
     }
 
     // temporary skeleton code & stub return
@@ -51,4 +42,32 @@ public class Transaction
     {
 
     }
+
+    
+    // gets locks
+	public ArrayList<Lock> getLocks()
+    {
+        return locks;
+    }
+    
+	// add new lock
+	public void addLock(Lock lock)
+	{
+        locks.add
+	}
+	
+	// append to transaction log
+	public void log (String logString)
+	{
+        log.append("\n").append(logString);
+        
+        if (!TransactionServer.transactionView) {
+            System.out.println("Transaction # " + this.getID() + ((this.getID() < 10) ? " " : "") + logString);
+        }
+	}
+	
+	public StringBuffer getLog()
+	{
+        return log;
+	}
 }
