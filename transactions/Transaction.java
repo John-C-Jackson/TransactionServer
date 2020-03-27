@@ -1,39 +1,54 @@
 package transactions;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import transaction_server.TransactionServer;
 import locks.Lock;
 
 /*
  * Transaction Class
- *  - [] read
- *  - [] write
- *  - [] close
+ *  - [] getID
+ *  - [] getLocks
+ *  - [] addLock
+ *  - [] log
+ *  - [] getLog
  */
 public class Transaction
 {
-    ArrayList<Lock> locks;
+    ArrayList<Lock> locks = null;
+    int transID;
     
-    // not sure if needed?
-    public ArrayList<Lock> getLocks()
+    StringBuffer log = new StringBuffer("");
+    
+    // gets transaction ID
+    public int getID()
+    {
+        return transID;
+    }
+    
+    // gets locks
+	public ArrayList<Lock> getLocks()
     {
         return locks;
     }
     
-    // temporary skeleton code & stub return
-    public int read(int accountId)
-    {
-        return 0;
-    }
-    
-    // temporary skeleton code & stub return
-    public void write(int accountId, int balance)
-    {
+	// add new lock
+	public void addLock(Lock lock)
+	{
+        locks.add
+	}
+	
+	// append to transaction log
+	public void log (String logString)
+	{
+        log.append("\n").append(logString);
         
-    }
-    
-    // not entirely sure what close is meant to do... 
-    public void close()
-    {
-        
-    }
+        if (!TransactionServer.transactionView) {
+            System.out.println("Transaction # " + this.getID() + ((this.getID() < 10) ? " " : "") + logString);
+        }
+	}
+	
+	public StringBuffer getLog()
+	{
+        return log;
+	}
 }
