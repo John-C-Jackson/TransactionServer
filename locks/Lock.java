@@ -9,13 +9,19 @@ public class Lock implements LockTypes
     // object needs to be replaced with Account??
     private Object object;                          // object being protected by lock
     private ArrayList<Transaction> holders;         // Transactions holding the object
-    private LockType lockType;
+    private int currentLockType;
+    private Account account;
 
-    public Lock() {}
+    public Lock( Account account)
+    {
+      this.holders = new ArrayList();
+      this.account = account ;
+      this.currentLockType = EMPTY_LOCK;
+    }
 
     public synchronized void acquire(Transaction trans, LockType lockType)
     {
-        while(isConflict())
+        while(isConflict(transaction, lockType))
         {
             try
             {
@@ -53,17 +59,30 @@ public class Lock implements LockTypes
         // set locktype to none -- From book pseudocode..
         // not sure why we would set to none... can't there still be
         // other transactions waiting on this object?
-        lockType.setNone();
+
+        if (holders.isEmpty())
+        {
+          this.currentLockType = EMPTY_LOCK;
+
+        }
+      //  lockType.setNone();
         notifyAll();
     }
 
     // TO-DO: implement this function
-    public boolean isConflict()
+    public boolean isConflict( Transaction trans, int lockType)
     {
-        // temporary return
+        if(holders.isEmpty())
+        {
+          return false;
+        }
+        else if(holders.size() == 1 && holders.contains(tranaction))
+        {
+          return false;
+        }
         return true;
     }
-    
+
 
     public boolean isHolder(Transaction trans)
     {
@@ -73,4 +92,17 @@ public class Lock implements LockTypes
         }
         return false;
     }
+
+    public Account getAccount()
+    {
+      return account;
+    }
+
+    /*
+
+    public synchronized int getType()
+    {
+      return currentLockType;
+    }
+    **/
 }

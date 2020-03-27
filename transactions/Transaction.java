@@ -4,26 +4,45 @@ import java.util.ArrayList;
 import transaction_server.TransactionServer;
 import locks.Lock;
 
-/*
- * Transaction Class
- *  - [] getID
- *  - [] getLocks
- *  - [] addLock
- *  - [] log
- *  - [] getLog
- */
+
+
 public class Transaction
 {
     ArrayList<Lock> locks = null;
-    int transID;
-    
+    int transactionID;
     StringBuffer log = new StringBuffer("");
-    
-    // gets transaction ID
+
+
+
+    Transaction(int transactionID)
+    {
+      this.transactionID= transactionID;
+      this.locks = new ArrayList();
+    }
+
+
     public int getID()
     {
-        return transID;
+      return transactionID;
     }
+
+    // temporary skeleton code & stub return
+    public int read(int accountId)
+    {
+    }
+
+    // temporary skeleton code & stub return
+    public void write(int accountId, int balance)
+    {
+
+    }
+
+    // not entirely sure what close is meant to do...
+    public void close()
+    {
+
+    }
+
     
     // gets locks
 	public ArrayList<Lock> getLocks()
