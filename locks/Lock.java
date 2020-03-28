@@ -9,21 +9,15 @@ public class Lock implements LockTypes
     // object needs to be replaced with Account??
     private Object object;                          // object being protected by lock
     private ArrayList<Transaction> holders;         // Transactions holding the object
-    private int currentLockType;
-    private Account account;
-
-    public Lock( Account account)
-    {
-      this.holders = new ArrayList();
-      this.account = account ;
-      this.currentLockType = EMPTY_LOCK;
-    }
-
+    private LockType lockType;
+    
+    public Lock() {}
+    
     public synchronized void acquire(Transaction trans, LockType lockType)
     {
-        while(isConflict(transaction, lockType))
+        while(isConflict())
         {
-            try
+            try 
             {
                 wait();
             }
@@ -52,38 +46,24 @@ public class Lock implements LockTypes
             this.lockType.promote();
         }
     }
-
+    
     public synchronized void release(Transaction trans)
     {
         holders.remove(trans);
-        // set locktype to none -- From book pseudocode..
-        // not sure why we would set to none... can't there still be
+        // set locktype to none -- From book pseudocode.. 
+        // not sure why we would set to none... can't there still be 
         // other transactions waiting on this object?
-
-        if (holders.isEmpty())
-        {
-          this.currentLockType = EMPTY_LOCK;
-
-        }
-      //  lockType.setNone();
+        lockType.setNone();
         notifyAll();
     }
-
+    
     // TO-DO: implement this function
-    public boolean isConflict( Transaction trans, int lockType)
+    public boolean isConflict()
     {
-        if(holders.isEmpty())
-        {
-          return false;
-        }
-        else if(holders.size() == 1 && holders.contains(tranaction))
-        {
-          return false;
-        }
+        // temporary return
         return true;
     }
-
-
+    
     public boolean isHolder(Transaction trans)
     {
         if (holders.contains(trans))
@@ -92,17 +72,5 @@ public class Lock implements LockTypes
         }
         return false;
     }
+}   
 
-    public Account getAccount()
-    {
-      return account;
-    }
-
-    /*
-
-    public synchronized int getType()
-    {
-      return currentLockType;
-    }
-    **/
-}
