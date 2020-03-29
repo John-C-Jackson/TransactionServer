@@ -3,16 +3,65 @@ import accounts.AccountManager;
 import locks.LockManager;
 import transactions.TransactionManager;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.util.*;
+
 /*
  * TransactionServer Class
  *  - [] runs server loop
  *  - [] takes requests from client side
  */
-public class TransactionServer
+public class TransactionServer extends Thread
 {
-    public static AccountManager accountMgr;
-    public static LockManager lockMgr;
-    public static TransactionManager transMgr;
-    
+    public static AccountManager accountMgr = null;
+    public static LockManager lockMgr = null;
+    public static TransactionManager transMgr = null;
+    public static  Boolean transView;
+    public ServerSocket serverSocket = null;
+
     // implement server loop here
+
+/*
+    public TransactionServer()
+    {
+      // somehwere here read the property handler
+
+
+      // create trans LockManager
+      // create account lockMgr
+      // create lock lockMgr
+      //
+
+      try
+        {
+          serverSocket = new ServerSocket(Integer.parseInt( /// something here for port));
+          System.out.println("TransactionServer ServerSocket created");
+        }
+        catch (IOException ex)
+        {
+          System.out.println("TransactionServer could not create server socket");
+          ex.printStackTrace();
+          System.exit(1);
+        }
+
+
+    }
+
+
+    public void run()
+    {
+      while(true)
+      {
+      try
+      {
+
+      }
+
+      }
+    }
+
+  **/
 }
