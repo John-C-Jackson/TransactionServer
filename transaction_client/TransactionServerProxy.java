@@ -24,6 +24,7 @@ public class TransactionServerProxy
     // figure out which transaction were connecting with
     public int openTransaction()
     {
+        
         return 0;
     }
     
