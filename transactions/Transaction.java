@@ -11,29 +11,27 @@ import locks.Lock;
  */
 public class Transaction
 {
-    ArrayList<Lock> locks;
+    int transID;
+    ArrayList<Lock> locks = null;
     
-    // not sure if needed?
+    Transaction(int transID) 
+    {
+        this.transID = transID;
+        this.locks = new ArrayList<Lock>();
+    }
+    
     public ArrayList<Lock> getLocks()
     {
         return locks;
     }
     
-    // temporary skeleton code & stub return
-    public int read(int accountId)
+    public int getID()
     {
-        return 0;
+        return transID;
     }
     
-    // temporary skeleton code & stub return
-    public void write(int accountId, int balance)
+    public void addLock(Lock lock)
     {
-        
-    }
-    
-    // not entirely sure what close is meant to do... 
-    public void close()
-    {
-        
+        locks.add(lock);
     }
 }

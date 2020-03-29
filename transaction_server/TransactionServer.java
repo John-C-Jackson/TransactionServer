@@ -10,9 +10,9 @@ import transactions.TransactionManager;
  */
 public class TransactionServer
 {
-    private static AccountManager accountMgr;
-    private static LockManager lockMgr;
-    private static TransactionManager transMgr;
+    public static AccountManager accountMgr;
+    public static LockManager lockMgr;
+    public static TransactionManager transMgr;
     
     // implement server loop here
 }

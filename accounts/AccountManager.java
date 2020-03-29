@@ -1,6 +1,11 @@
 package accounts;
 import java.util.ArrayList;
 
+import transaction_server.TransactionServer;
+import transactions.Transaction;
+import constants.LockTypes;
+import locks.LockType; 
+
 /*
  * Account Manager Class:
  *  - [X] Works on accounts (read & write method)
@@ -8,7 +13,7 @@ import java.util.ArrayList;
  *  - [X] provides access to accounts
  *  
  */
-public class AccountManager
+public class AccountManager implements LockTypes
 {
     private ArrayList<Account> accounts;
     
@@ -27,15 +32,32 @@ public class AccountManager
     }
     
     // reads the balance of an account
-    public int readBalance(int accountNumber)
+    public int readBalance(int accountNumber, Transaction trans)
     {
-        return getAccount(accountNumber).getAccountBalance();
+        // grab corresponding account
+        Account acc = getAccount(accountNumber);
+        
+        // acquire a read lock.
+        (TransactionServer.lockMgr).setLock(acc, trans, new LockType(READ_LOCK));
+        
+        // return the account balance
+        return acc.getAccountBalance();
     }
     
     //sets the balance of an account (accountNumber) to newBalance
-    public void writeBalance(int accountNumber, int newBalance)
+    public int writeBalance(int accountNumber, Transaction trans, int newBalance)
     {
-        getAccount(accountNumber).setAccountBalance(newBalance);
+        // grab corresponding account
+        Account acc = getAccount(accountNumber);
+        
+        // acquire a read lock.
+        (TransactionServer.lockMgr).setLock(acc, trans, new LockType(WRITE_LOCK));
+        
+        //set acc's balance to the new balance
+        acc.setAccountBalance(newBalance);
+        
+        // return the account balance
+        return newBalance;
     }
     
 }
