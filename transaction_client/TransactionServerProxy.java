@@ -67,6 +67,7 @@ public class TransactionServerProxy
       try
       {
       //  writeTo .writeObject(readMessage);
+      // balance = (Integer) readFrom.readObject();
 
       }
       catch(Exception ex)
