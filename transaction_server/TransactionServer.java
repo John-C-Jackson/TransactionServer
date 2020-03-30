@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.Properties;
 
+
 /*
  * TransactionServer Class
  *  - [] runs server loop
@@ -43,24 +44,25 @@ public class TransactionServer extends Thread
 
       // create transaction manager
       TransactionServer.transMgr = new TransactionManager();
-//      transView = Boolean.valueOf(propertiesFile.getProperty("TRANSACTION_VIEW"));
+      transView = Boolean.valueOf(handler.getProperty("TRANSACTION_VIEW"));
 
       // create lock manager
       TransactionServer.lockMgr = new LockManager();
-//      boolean applyLocking = Boolean.valueOf(propertiesFile.getProperty("APPLY_LOCKING"));
+      boolean applyLocking = Boolean.valueOf(handler.getProperty("APPLY_LOCKING"));
 
       // create account manager
       int numberAccounts = 0;
-//     numberAccounts = Integer.parseInt(propertiesFile.getProperty("NUMBER_ACCOUNTS"));
+      numberAccounts = Integer.parseInt(handler.getProperty("NUMBER_ACCOUNTS"));
       int initialBalance = 0;
-//      initialBalance = Integer.parseInt(propertiesFile.getProperty("INITIAL_BALANCE"));
+      initialBalance = Integer.parseInt(handler.getProperty("INITIAL_BALANCE"));
 
       TransactionServer.accountMgr = new AccountManager(numberAccounts, initialBalance);
 
-/*
+
       try
         {
-          serverSocket = new ServerSocket.getProperty("PORT");
+          int portNum = Integer.parseInt(handler.getProperty("PORT"));
+          serverSocket = new ServerSocket(portNum);
           System.out.println("TransactionServer ServerSocket created");
         }
         catch (IOException ex)
@@ -69,7 +71,7 @@ public class TransactionServer extends Thread
           ex.printStackTrace();
           System.exit(1);
         }
-*/
+
 
     }
 
