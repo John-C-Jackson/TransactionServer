@@ -21,7 +21,7 @@ public class TransactionClient extends Thread
         numberOfAccounts = Integer.parseInt(serverProps.getProperty("NUMBER_ACCOUNTS"));
         initialBalance = Integer.parseInt(serverProps.getProperty("INITIAL_BALANCE"));
 
-        numberOfTransactions = Integer.parseInt(serverProps.getProperty("NUMBER_TRANSACTIONS"));
+        numberOfTransactions = Integer.parseInt(clientProps.getProperty("NUMBER_TRANSACTIONS"));
     }
 
     @Override
@@ -62,10 +62,8 @@ public class TransactionClient extends Thread
 
 
 
-// ottte had this and im unsure extactly why...
-
 public static void main(String[] args)
 {
-  (new TransactionClient("../../config/TransactionClient.properties", "../../config/TransactionServer.properties")).start();
+  (new TransactionClient("config/clientProps.txt", "config/serverProps.txt")).start();
 }
 }
