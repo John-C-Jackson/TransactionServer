@@ -20,7 +20,7 @@ public class TransactionManager implements MessageTypes
     static final ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     static int transactionCounter = 0;
 
-    public TransactionManager() {};
+    public TransactionManager() {}
 
     public ArrayList<Transaction> getTransactions()
     {
@@ -64,18 +64,7 @@ public class TransactionManager implements MessageTypes
               System.exit(1);
             }
 
-            switch (message.getType())
-            {
-              case OPEN_TRANSACTION:
-                break;
-              case READ_TRANSACTION:
-                break;
-              case WRITE_TRANSACTION:
-                break;
 
-              case CLOSE_TRANSACTION:
-                break;
-            }
         }
 
 
@@ -91,13 +80,88 @@ public class TransactionManager implements MessageTypes
             }
             catch(IOException | ClassNotFoundException e)
             {
-              System.out.println(" TransactionManagerWorker run cannot read object");
+              System.out.println(" TransactionManagerWorker run() cannot read object");
               System.exit(1);
 
             }
 
+            switch (message.getType())
+            {
+// -------------------------------------------------------------------------------------------------------------
+              case OPEN_TRANSACTION:
+                synchronized(transactions)
+                {
+                  transaction = new Transaction(transactionCounter++);
+                  transactions.add(transaction);
+                }
+                try
+                {
+                  writeTo.writeObject(transaction.getID());
+
+                }
+                catch(IOException e )
+                {
+                  System.out.println("TransactionManagerWorker OPEN_TRANSACTION experienced error when reading");
+                }
+                break;
+// -------------------------------------------------------------------------------------------------------------
+              case READ_TRANSACTION:
+                accountNumber = (Integer) message.getContent();
+              //  balance = TransactionServer.accountManager.read(accountNumber, transaction);
+                try
+                {
+                  writeTo.writeObject((Integer) balance);
+                }
+                catch(IOException e)
+                {
+                  System.out.println("TransactionManagerWorker READ_TRANSACTION experienced error when reading");
+
+                }
+
+
+                break;
+// -------------------------------------------------------------------------------------------------------------
+              case WRITE_TRANSACTION:
+                Object[] content = (Object[]) message.getContent();
+                accountNumber = ( (Integer) content[0]);
+                balance = ((Integer) content[1]);
+            //    balance = TransactionServer.accountManager.write(accountMgr, transaction, balance);
+
+                try
+                {
+                  writeTo.writeObject((Integer) balance);
+                }
+                catch(IOException e)
+                {
+                  System.out.println("TransactionManagerWorker WRITE_TRANSACTION experienced error when writing");
+
+                }
+
+                break;
+//--------------------------------------------------------------------------------------------------------------
+              case CLOSE_TRANSACTION:
+                //    TransactionServer.LockManager.unlock(transaction);
+                transactions.remove(transaction);
+                try
+                {
+                  readFrom.close();
+                  writeTo.close();
+                  client.close();
+                  continueLooping = false;
+
+                }
+                catch(IOException e)
+                {
+                  System.out.println("TransactionManagerWorker CLOSE_TRANSACTION experienced error when closing");
+                }
+                break;
+
+//--------------------------------------------------------------------------------------------------------------
+
           }
 
-        }
+      }
+
     }
+  }
 }
