@@ -1,10 +1,13 @@
 package transaction_client;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import messages.Message;
+import constants.MessageTypes;
 
-public class TransactionServerProxy
+
+public class TransactionServerProxy implements MessageTypes
 {
     String host;
     int port;
@@ -26,21 +29,7 @@ public class TransactionServerProxy
     {
       try
       {
-        // ServerSocket serverSocket = new ServerSocket. //something like getport ("PORT");
-
-        // keeps track of the number of client connections
-        int clientCounter = 0;
-
-        System.out.println("Server established ..");
-
-        while(true)
-        {
-          clientCounter ++;
-
-        //  Socket clientSocket = serverSocket.accept();
-
-
-        }
+        dbConnection = new Socket( host, port);
 
 
 
@@ -63,11 +52,12 @@ public class TransactionServerProxy
     public int read(int accountNumber)
     {
       Integer balance = null;
-  //    Message readMessage = new Message(READ_TRANSACTION,accountNumber);
+      Message readMessage = new Message(READ_TRANSACTION,accountNumber);
+
       try
       {
-      //  writeTo .writeObject(readMessage);
-      // balance = (Integer) readFrom.readObject();
+       writeTo .writeObject(readMessage);
+       balance = (Integer) readFrom.readObject();
 
       }
       catch(Exception ex)
@@ -75,19 +65,21 @@ public class TransactionServerProxy
         System.out.println("Error occur in TransactionServerProxy");
         ex.printStackTrace();
       }
-      // null balance as of right now
+
         return balance;
     }
 
     public int write(int accountNumber, int amount)
     {
 
-    //  Message writeMessage = new Message( WRITE_TRANSACTION);
+      Message writeMessage = new Message( WRITE_TRANSACTION , accountNumber);
       Integer balance = null;
 
       try
       {
-        // TO do
+        writeTo.writeObject(writeMessage);
+
+        // TODO
       }
       catch (Exception ex)
       {
