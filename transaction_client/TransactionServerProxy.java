@@ -13,8 +13,8 @@ public class TransactionServerProxy implements MessageTypes
     int port;
 
     private Socket dbConnection = null;
-    private ObjectOutputStream writeTo = null;
-    private ObjectInputStream readFrom = null;
+    private static ObjectOutputStream writeTo = null;
+    private static ObjectInputStream readFrom = null;
     private Integer transId = 0;
 
     public TransactionServerProxy(String host, int port)
@@ -28,17 +28,22 @@ public class TransactionServerProxy implements MessageTypes
       try
       {
         dbConnection = new Socket( host, port);
-		readFrom = new ObjectInputStream(dbConnection.getInputStream());
+
 		writeTo = new ObjectOutputStream(dbConnection.getOutputStream());
+		writeTo.flush();
+		readFrom = new ObjectInputStream(dbConnection.getInputStream());
 
 		//construct an open message
 		Message openMessage = new Message(OPEN_TRANSACTION);
 
 		// send open message to server
 		writeTo.writeObject(openMessage);
+		System.out.println("sent message...");
 
 		// server responds with transId
-		transId = (Integer) readFrom.readObject();
+
+		transId = (Integer) (readFrom.readObject());
+		System.out.println("received response");
 
       }
       catch( Exception ex)

@@ -55,8 +55,10 @@ public class TransactionManager implements MessageTypes
             // streams set up
             try
             {
+			  writeTo = new ObjectOutputStream(client.getOutputStream());
+			  writeTo.flush();
               readFrom = new ObjectInputStream(client.getInputStream());
-              writeTo = new ObjectOutputStream(client.getOutputStream());
+			  System.out.println("worker streams set up...");
             }
             catch(IOException e)
             {
@@ -72,16 +74,20 @@ public class TransactionManager implements MessageTypes
         @Override
         public void run()
         {
+		  System.out.println("inside transactionmanagerworker");
           while(continueLooping)
           {
             try
             {
+			  System.out.println("listeningForMessage");
               message = (Message) readFrom.readObject();
+			  System.out.println("messageReceived");
 
             }
             catch(IOException | ClassNotFoundException e)
             {
               System.out.println(" TransactionManagerWorker run() cannot read object");
+			  System.out.println(e);
               System.exit(1);
 
             }
@@ -90,6 +96,7 @@ public class TransactionManager implements MessageTypes
             {
 // -------------------------------------------------------------------------------------------------------------
               case OPEN_TRANSACTION:
+			    System.out.println("type inferred correctly");
                 synchronized(transactions)
                 {
                   transaction = new Transaction(transactionCounter++);

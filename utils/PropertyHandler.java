@@ -26,7 +26,6 @@ public class PropertyHandler extends Properties
                 // get the next line
                 propertyLine = scanner.nextLine();
                 keyValue = propertyLine.split(" ");
-				System.out.println(keyValue[0] + " " + keyValue[1]);
 
                 this.put(keyValue[0], keyValue[1]);
             }

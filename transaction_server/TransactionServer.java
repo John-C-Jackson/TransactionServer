@@ -67,17 +67,21 @@ public class TransactionServer extends Thread
     @Override
     public void run()
     {
+		System.out.println("running...");
+		int index = 0;
       while(true)
       {
 	      try
 	      {
 	        transMgr.runTransaction(serverSocket.accept());
+			System.out.println(index);
 	      }
 	      catch(IOException e)
 	      {
 	        System.out.println("TransactionServer could not runTransaction");
 	        e.printStackTrace();
 	      }
+		  index ++;
 
       }
     }
