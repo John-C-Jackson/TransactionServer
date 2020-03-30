@@ -8,7 +8,37 @@ public class Message implements Serializable, MessageTypes
 
     private static final long serialVersionUID = 6029174950700546138L;
     int type;
-    
-    public Message(){}
-    
+    Object msgContent;
+
+    public Message( int type, Object msgContent )
+    {
+      this.type = type;
+      this.msgContent = msgContent;
+    }
+
+    public Message( int type )
+    {
+      this(type, null);
+    }
+
+    public int getType()
+    {
+      return type;
+    }
+
+    public void setType(int type)
+    {
+      this.type = type;
+    }
+
+    public Object getContent()
+    {
+      return msgContent;
+    }
+
+    public void setContent(Object msgContent)
+    {
+      this.msgContent = msgContent;
+    }
+
 }

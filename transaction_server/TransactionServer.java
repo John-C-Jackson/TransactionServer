@@ -1,13 +1,13 @@
 package transaction_server;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-
 import accounts.AccountManager;
 import locks.LockManager;
 import transactions.TransactionManager;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.util.*;
 
 /*
  * TransactionServer Class
@@ -16,41 +16,59 @@ import transactions.TransactionManager;
  */
 public class TransactionServer extends Thread
 {
-    private static AccountManager accountMgr;
-    private static LockManager lockMgr;
-    private static TransactionManager transMgr;
-
-    /*
-       he mentioned that the following have to be known by the server
-       i assuming that he is referring to the TransactionServer
-    **/
-
-    int port;
-    String host;
-    int numberOfAccouts;
-    int initialBalance;
+    public static AccountManager accountMgr = null;
+    public static LockManager lockMgr = null;
+    public static TransactionManager transMgr = null;
+    public static  Boolean transView;
+    public ServerSocket serverSocket = null;
 
     // implement server loop here
 
+/*
     public TransactionServer()
     {
+      // somehwere here read the property handler
 
 
+      // create trans LockManager
+      TransactionServer.TransactionManager = new TransactionManager();
+      // create account lockMgr
+      // create lock lockMgr
+      //
 
-      // server loop
-      while (true)
-      {
-
-        public void run()
+      try
         {
-
-      //    transMgr.runTrans(serverSocket.accept())
+          serverSocket = new ServerSocket.getProperty("PORT");
+          System.out.println("TransactionServer ServerSocket created");
+        }
+        catch (IOException ex)
+        {
+          System.out.println("TransactionServer could not create server socket");
+          ex.printStackTrace();
+          System.exit(1);
         }
 
-      }
 
     }
 
+    @Override
+    public void run()
+    {
+      while(true)
+      {
+      try
+      {
+        TransactionManager.runTransaction(serverSocket.accept());
+      }
+      catch(IOException e)
+      {
+      System.out.println("TransactionServer could not runTransaction");
+      ex.printStackTrace();
 
+      }
 
+      }
+    }
+
+  **/
 }

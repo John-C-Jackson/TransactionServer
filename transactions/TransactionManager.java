@@ -1,12 +1,15 @@
 package transactions;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
+import constants.MessageTypes;
+import messages.Message;
 
-public class TransactionManager  implements MessageTypes
+import java.util.*;
+import java.io.IOException;
+
+public class TransactionManager implements MessageTypes
 {
     /*
      * Transaction Manager Class
@@ -14,86 +17,87 @@ public class TransactionManager  implements MessageTypes
      *  - [] per transaction, open one connection until transaction is closed
      */
 
-    private static final ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-    private static int transactionCounter = 0;
-    boolean flag;
+    static final ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    static int transactionCounter = 0;
 
-    public TransactionManager()
-    {
-
-    }
+    public TransactionManager() {};
 
     public ArrayList<Transaction> getTransactions()
     {
-      return transactions;
+        return transactions;
     }
 
-    public void runTrans(Socket client)
+    public void runTransaction(Socket client)
     {
-      (new TransactionManagerWorker(client).start());
+        (new TransactionManagerWorker(client)).start();
     }
 
-    private class TransactionManagerWorker extends Thread
+
+//    needs a lot more logic in this class (i.e. handle READ, WRITE, OPEN and CLOSE messages)
+    public class TransactionManagerWorker extends Thread
     {
-      Socket client = null;
-      ObjectInputStream readFromNetwork = null;
-      ObjectInputStream writeToNetwork = null;
+        Socket client = null;
+        ObjectInputStream readFrom = null;
+        ObjectOutputStream writeTo = null;
 
-      Message message = null;
+        Transaction transaction = null;
+        int accountNumber = 0;
+        int balance = 0;
 
-      Transaction transaction = null;
-      int accountNumber = 0 ;
-      int balance = 0 ;
+        boolean continueLooping = true;
+        Message message = null;
 
-      boolean continueProcess;
-
-      private TransactionManagerWorker(Socket client)
-      {
-        this.client = client;
-        try
+        public TransactionManagerWorker(Socket client)
         {
-          readFromNetwork = new ObjectInputStream(client.getInputStream());
-          writeToNetwork = new ObjectInputStream(client.getInputStream());
-        }
-        catch(IOException ex)
-        {
-          System.exit(1);
-        }
+            this.client = client;
 
-      }
+            // streams set up
+            try
+            {
+              readFrom = new ObjectInputStream(client.getInputStream());
+              writeTo = new ObjectOutputStream(client.getOutputStream());
+            }
+            catch(IOException e)
+            {
+              System.out.println("TransactionManagerWorker failed to open streams");
+              e.printStackTrace();
+              System.exit(1);
+            }
 
-      @Override
-      public void run()
-      {
-        while(continueProcess)
-        {
-          try
-          {
+            switch (message.getType())
+            {
+              case OPEN_TRANSACTION:
+                break;
+              case READ_TRANSACTION:
+                break;
+              case WRITE_TRANSACTION:
+                break;
 
-          }
-          catch(IOException e)
-          {
-
-          }
-
-          switch(message.getType())
-          {
-            case OPEN_TRANSACTION:
-              break;
-            case WRITE_REQUEST:
-              break;
-            case READ_TRANSACTION:
-              break;
-            case CLOSE_TRANSACTION:
-              break;
-          }
-
+              case CLOSE_TRANSACTION:
+                break;
+            }
         }
 
-      }
 
+        @Override
+        public void run()
+        {
+          while(continueLooping)
+          {
+            try
+            {
+              message = (Message) readFrom.readObject();
 
+            }
+            catch(IOException | ClassNotFoundException e)
+            {
+              System.out.println(" TransactionManagerWorker run cannot read object");
+              System.exit(1);
+
+            }
+
+          }
+
+        }
     }
-
-
 }
