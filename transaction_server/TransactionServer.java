@@ -31,13 +31,14 @@ public class TransactionServer extends Thread
 
 
       // create trans LockManager
+      TransactionServer.TransactionManager = new TransactionManager();
       // create account lockMgr
       // create lock lockMgr
       //
 
       try
         {
-          serverSocket = new ServerSocket(Integer.parseInt( /// something here for port));
+          serverSocket = new ServerSocket.getProperty("PORT");
           System.out.println("TransactionServer ServerSocket created");
         }
         catch (IOException ex)
@@ -57,6 +58,12 @@ public class TransactionServer extends Thread
       {
       try
       {
+        TransactionManager.runTransaction(serverSocket.accept());
+      }
+      catch(IOException e)
+      {
+      System.out.println("TransactionServer could not runTransaction");
+      ex.printStackTrace();
 
       }
 
