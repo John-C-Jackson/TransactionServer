@@ -15,7 +15,7 @@ public class TransactionServerProxy implements MessageTypes
     private Socket dbConnection = null;
     private ObjectOutputStream writeTo = null;
     private ObjectInputStream readFrom = null;
-    private int transId = 0;
+    private Integer transId = 0;
 
     public TransactionServerProxy(String host, int port)
     {
@@ -23,15 +23,22 @@ public class TransactionServerProxy implements MessageTypes
         this.port = port;
     }
 
-    // do a socket.accept and establish input/ output streams.
-    // figure out which transaction were connecting with
     public int openTransaction()
     {
       try
       {
         dbConnection = new Socket( host, port);
+		readFrom = new ObjectInputStream(dbConnection.getInputStream());
+		writeTo = new ObjectOutputStream(dbConnection.getOutputStream());
 
+		//construct an open message
+		Message openMessage = new Message(OPEN_TRANSACTION);
 
+		// send open message to server
+		writeTo.writeObject(openMessage);
+
+		// server responds with transId
+		transId = (Integer) readFrom.readObject();
 
       }
       catch( Exception ex)
@@ -40,23 +47,36 @@ public class TransactionServerProxy implements MessageTypes
         ex.printStackTrace();
       }
 
-        return 0;
+        return transId;
     }
 
     // close socket connection
     public void closeTransaction()
     {
-
+		try
+		{
+			// construct a close message
+			Message closeMessage = new Message(CLOSE_TRANSACTION);
+			// send close message
+			writeTo.writeObject(closeMessage);
+			// close the connection.
+			dbConnection.close();
+		}
+		catch( Exception ex)
+        {
+          System.out.println("Error occur in TransactionServerProxy");
+          ex.printStackTrace();
+        }
     }
 
     public int read(int accountNumber)
     {
       Integer balance = null;
-      Message readMessage = new Message(READ_TRANSACTION,accountNumber);
+      Message readMessage = new Message(READ_TRANSACTION, accountNumber);
 
       try
       {
-       writeTo .writeObject(readMessage);
+       writeTo.writeObject(readMessage);
        balance = (Integer) readFrom.readObject();
 
       }
@@ -71,15 +91,18 @@ public class TransactionServerProxy implements MessageTypes
 
     public int write(int accountNumber, int amount)
     {
+	  // construct a message with the accountNumber and write amount.
+	  int[] writeArray = {accountNumber, amount};
+      Message writeMessage = new Message( WRITE_TRANSACTION, writeArray);
 
-      Message writeMessage = new Message( WRITE_TRANSACTION , accountNumber);
       Integer balance = null;
 
       try
       {
+		// send the writeMessage
         writeTo.writeObject(writeMessage);
-
-        // TODO
+		// open the writeMessage
+		balance = (Integer) readFrom.readObject();
       }
       catch (Exception ex)
       {

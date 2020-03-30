@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class PropertyHandler extends Properties
 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 5731181758919549697L;
 
@@ -19,14 +19,15 @@ public class PropertyHandler extends Properties
         try
         {
             Scanner scanner = new Scanner( new File(filepath));
-            
+
             // loop through property file and read each line.
             while (scanner.hasNextLine())
             {
                 // get the next line
                 propertyLine = scanner.nextLine();
                 keyValue = propertyLine.split(" ");
-                
+				System.out.println(keyValue[0] + " " + keyValue[1]);
+
                 this.put(keyValue[0], keyValue[1]);
             }
             scanner.close();
