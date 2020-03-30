@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import constants.MessageTypes;
+import transaction_server.TransactionServer;
 import messages.Message;
 
 import java.util.*;
@@ -107,7 +108,7 @@ public class TransactionManager implements MessageTypes
 // -------------------------------------------------------------------------------------------------------------
               case READ_TRANSACTION:
                 accountNumber = (Integer) message.getContent();
-              //  balance = TransactionServer.accountManager.read(accountNumber, transaction);
+                balance = TransactionServer.accountMgr.readBalance(accountNumber, transaction);
                 try
                 {
                   writeTo.writeObject((Integer) balance);
@@ -125,7 +126,7 @@ public class TransactionManager implements MessageTypes
                 Object[] content = (Object[]) message.getContent();
                 accountNumber = ( (Integer) content[0]);
                 balance = ((Integer) content[1]);
-            //    balance = TransactionServer.accountManager.write(accountMgr, transaction, balance);
+                balance = TransactionServer.accountMgr.writeBalance(accountNumber, transaction, balance);
 
                 try
                 {
@@ -140,7 +141,7 @@ public class TransactionManager implements MessageTypes
                 break;
 //--------------------------------------------------------------------------------------------------------------
               case CLOSE_TRANSACTION:
-                //    TransactionServer.LockManager.unlock(transaction);
+                TransactionServer.lockMgr.unlock(transaction);
                 transactions.remove(transaction);
                 try
                 {
