@@ -85,18 +85,23 @@ public class TransactionManager implements MessageTypes
               System.exit(1);
 
             }
-
+            // gets type of message
+            // comparesw to what kind of message
             switch (message.getType())
             {
 // -------------------------------------------------------------------------------------------------------------
               case OPEN_TRANSACTION:
                 synchronized(transactions)
                 {
+                  // create a new transaction
                   transaction = new Transaction(transactionCounter++);
+                  //add it to the rest fo the transactions
                   transactions.add(transaction);
                 }
+
                 try
                 {
+                  // write to the object
                   writeTo.writeObject(transaction.getID());
 
                 }
@@ -104,13 +109,18 @@ public class TransactionManager implements MessageTypes
                 {
                   System.out.println("TransactionManagerWorker OPEN_TRANSACTION experienced error when reading");
                 }
+
+                transaction.log("[TransactionManagerWorker.run] OPEN_TRANSACTION >>>>>> Transaction Number: "+ transaction.getID());
                 break;
 // -------------------------------------------------------------------------------------------------------------
               case READ_TRANSACTION:
+                // get the content of the message
                 accountNumber = (Integer) message.getContent();
+                // read the balance from the acccount manager
                 balance = TransactionServer.accountMgr.readBalance(accountNumber, transaction);
                 try
                 {
+                  // the the balance
                   writeTo.writeObject((Integer) balance);
                 }
                 catch(IOException e)
@@ -119,17 +129,23 @@ public class TransactionManager implements MessageTypes
 
                 }
 
+                transaction.log("[TransactionManagerWorker.run] READ_TRANSACTION >>>>>> Account Number: "+ accountNumber + "Balance: " + balance );
 
                 break;
 // -------------------------------------------------------------------------------------------------------------
               case WRITE_TRANSACTION:
+              // create an object
                 Object[] content = (Object[]) message.getContent();
+                // read account number from content
                 accountNumber = ( (Integer) content[0]);
+                // read the balance from content
                 balance = ((Integer) content[1]);
+                // get balancefrom the account
                 balance = TransactionServer.accountMgr.writeBalance(accountNumber, transaction, balance);
 
                 try
                 {
+                  // write the balance
                   writeTo.writeObject((Integer) balance);
                 }
                 catch(IOException e)
@@ -138,23 +154,35 @@ public class TransactionManager implements MessageTypes
 
                 }
 
+                transaction.log("[TransactionManagerWorker.run] WRITE_TRANSACTION  >>>>>> Account Number: "+accountNumber
+                                    +" New Balance: "+ balance);
+
                 break;
 //--------------------------------------------------------------------------------------------------------------
               case CLOSE_TRANSACTION:
+              // unlock the transaction
                 TransactionServer.lockMgr.unlock(transaction);
+                // remove the tranaction
                 transactions.remove(transaction);
                 try
                 {
+                  // close everything opened
                   readFrom.close();
                   writeTo.close();
                   client.close();
                   continueLooping = false;
-
                 }
                 catch(IOException e)
                 {
                   System.out.println("TransactionManagerWorker CLOSE_TRANSACTION experienced error when closing");
                 }
+                transaction.log("[TransactionManagerWorker.run] CLOSE_TRANSACTION  >>>>>> Transaction: "+ transaction.getID());
+
+                if(TransactionServer.transView)
+                {
+                  System.out.println(transaction.getLog());
+                }
+
                 break;
 
 //--------------------------------------------------------------------------------------------------------------

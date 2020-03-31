@@ -34,10 +34,12 @@ public class TransactionServer extends Thread
       // create transaction manager
       TransactionServer.transMgr = new TransactionManager();
       transView = Boolean.valueOf(serverProps.getProperty("TRANSACTION_VIEW"));
+      System.out.println("[TransactionServer] TransactionManager created ");
 
       // create lock manager
       TransactionServer.lockMgr = new LockManager();
       Boolean applyLocking = Boolean.valueOf(serverProps.getProperty("APPLY_LOCKING"));
+      System.out.println("[TransactionServer] LockManager created ");
 
       // create account manager
       int numberAccounts = 0;
@@ -46,6 +48,7 @@ public class TransactionServer extends Thread
       initialBalance = Integer.parseInt(serverProps.getProperty("INITIAL_BALANCE"));
 
       TransactionServer.accountMgr = new AccountManager(numberAccounts, initialBalance);
+      System.out.println("[TransactionServer] AccountManager created ");
 
 
       try
@@ -67,6 +70,7 @@ public class TransactionServer extends Thread
     @Override
     public void run()
     {
+      // server loop
       while(true)
       {
 	      try

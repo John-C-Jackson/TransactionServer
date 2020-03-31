@@ -11,6 +11,8 @@ public class TransactionClient extends Thread
     public int port;
     public String host;
 
+    public static StringBuffer log;
+
     public TransactionClient(String clientPropertiesFile, String serverPropertiesFile)
     {
         Properties serverProps = new PropertyHandler(serverPropertiesFile);
@@ -22,6 +24,8 @@ public class TransactionClient extends Thread
         initialBalance = Integer.parseInt(serverProps.getProperty("INITIAL_BALANCE"));
 
         numberOfTransactions = Integer.parseInt(clientProps.getProperty("NUMBER_TRANSACTIONS"));
+
+        log = new StringBuffer("");
     }
 
     @Override

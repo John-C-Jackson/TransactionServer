@@ -21,11 +21,13 @@ public class Message implements Serializable, MessageTypes
       this(type, null);
     }
 
+    // getter for type
     public int getType()
     {
       return type;
     }
 
+    // setter for type 
     public void setType(int type)
     {
       this.type = type;
