@@ -55,7 +55,7 @@ public class TransactionServer extends Thread
 	  {
 	     int portNum = Integer.parseInt(serverProps.getProperty("PORT"));
 		 serverSocket = new ServerSocket(portNum);
-		 System.out.println("TransactionServer ServerSocket created");
+		 System.out.println("[TransactionServer] ServerSocket created");
 	  }
 	  catch (IOException ex)
 	  {

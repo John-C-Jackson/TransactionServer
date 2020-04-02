@@ -7,8 +7,8 @@ import transactions.Transaction;
 
 public class LockManager implements LockTypes
 {
-    private ArrayList<Lock> locks;
-    
+    private ArrayList<Lock> locks = new ArrayList<Lock>();
+
     // taken from book pseudocode... I'm thinking Object should be changed to Account.
     public void setLock(Account account, Transaction trans, LockType lockType)
     {
@@ -26,16 +26,16 @@ public class LockManager implements LockTypes
                     lockExists = true;
                 }
             }
-            
+
             if (!lockExists)
             {
                 locks.add(foundLock);
             }
-            
+
         }
         foundLock.acquire(trans, lockType);
     }
-    
+
     // synchronized this one because we want to remove all entries
     public synchronized void unlock(Transaction trans)
     {

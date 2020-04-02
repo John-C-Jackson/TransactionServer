@@ -28,8 +28,9 @@ public class TransactionServerProxy implements MessageTypes
       try
       {
         dbConnection = new Socket( host, port);
-		readFrom = new ObjectInputStream(dbConnection.getInputStream());
+
 		writeTo = new ObjectOutputStream(dbConnection.getOutputStream());
+		readFrom = new ObjectInputStream(dbConnection.getInputStream());
 
 		//construct an open message
 		Message openMessage = new Message(OPEN_TRANSACTION);
@@ -57,10 +58,13 @@ public class TransactionServerProxy implements MessageTypes
 		{
 			// construct a close message
 			Message closeMessage = new Message(CLOSE_TRANSACTION);
+			// System.out.println("[TransactionServerProxy] constructed CLOSE_TRANSACTION message.");
 			// send close message
 			writeTo.writeObject(closeMessage);
+			// System.out.println("[TransactionServerProxy] sent CLOSE_TRANSACTION message.");
 			// close the connection.
 			dbConnection.close();
+			// System.out.println("[TransactionServerProxy] closed connection to server.");
 		}
 		catch( Exception ex)
         {

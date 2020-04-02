@@ -47,7 +47,7 @@ public class Transaction
       log.append("\n").append(logString);
       if(!TransactionServer.transView)
       {
-        System.out.println("Transaction Number" + this.getID() + (( this.getID() < 10 ) ? "" : "" ) + logString );
+        System.out.println("Transaction Number " + this.getID() + (( this.getID() < 10 ) ? " " : "" ) + " " + logString );
       }
     }
 }

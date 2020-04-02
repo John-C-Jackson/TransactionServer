@@ -129,17 +129,17 @@ public class TransactionManager implements MessageTypes
 
                 }
 
-                transaction.log("[TransactionManagerWorker.run] READ_TRANSACTION >>>>>> Account Number: "+ accountNumber + "Balance: " + balance );
+                transaction.log("[TransactionManagerWorker.run] READ_TRANSACTION >>>>>> Account Number: "+ accountNumber + " Balance: " + balance );
 
                 break;
 // -------------------------------------------------------------------------------------------------------------
               case WRITE_TRANSACTION:
               // create an object
-                Object[] content = (Object[]) message.getContent();
+                int[] content = (int[]) message.getContent();
                 // read account number from content
-                accountNumber = ( (Integer) content[0]);
+                accountNumber = content[0];
                 // read the balance from content
-                balance = ((Integer) content[1]);
+                balance = content[1];
                 // get balancefrom the account
                 balance = TransactionServer.accountMgr.writeBalance(accountNumber, transaction, balance);
 

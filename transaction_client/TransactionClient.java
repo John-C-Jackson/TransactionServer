@@ -41,15 +41,15 @@ public class TransactionClient extends Thread
 
             TransactionServerProxy transaction = new TransactionServerProxy(host, port);
             int transId = transaction.openTransaction();
-            System.out.println("Transaction Number: " + transId + "has started");
+            System.out.println("Transaction Number: " + transId + " has started");
 
             int accountFrom = (int) Math.floor(Math.random() * numberOfAccounts);
             int accountTo = (int) Math.floor(Math.random() * numberOfAccounts);
             int amount = (int) Math.ceil(Math.random() * initialBalance);
             int balance;
 
-            System.out.println("Transaction Number : " + transId + " Amount: $"
-                          + amount + " Transfered from: " + accountFrom +"to " + accountTo);
+            System.out.println("Transaction Number: " + transId + " Amount: $"
+                          + amount + " Transfered from: " + accountFrom +" to " + accountTo);
            balance= transaction.read(accountFrom);
            transaction.write(accountFrom , balance - amount);
 
