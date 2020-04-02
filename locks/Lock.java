@@ -86,7 +86,11 @@ public class Lock implements LockTypes
 
     public boolean isConflict(Transaction trans, LockType type)
     {
-        if (holders.isEmpty())
+        if (type.getType() == NO_LOCK)
+  		{
+  			return false;
+  		}
+        else if (holders.isEmpty())
         {
 			trans.log("[Lock.isConflict] current Lock: " + this.lockType.typeToString() + " on account number " + account.getAccountNumber() + " does not conflict with " + type.typeToString());
             // no lock holders => no conflict
