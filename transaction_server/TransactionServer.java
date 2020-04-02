@@ -32,13 +32,13 @@ public class TransactionServer extends Thread
 	  Properties serverProps = new PropertyHandler(serverPropertiesFile);
 
       // create transaction manager
-      TransactionServer.transMgr = new TransactionManager();
+	  Boolean applyLocking = Boolean.valueOf(serverProps.getProperty("APPLY_LOCKING"));
+      TransactionServer.transMgr = new TransactionManager(applyLocking);
       transView = Boolean.valueOf(serverProps.getProperty("TRANSACTION_VIEW"));
       System.out.println("[TransactionServer] TransactionManager created ");
 
       // create lock manager
       TransactionServer.lockMgr = new LockManager();
-      Boolean applyLocking = Boolean.valueOf(serverProps.getProperty("APPLY_LOCKING"));
       System.out.println("[TransactionServer] LockManager created ");
 
       // create account manager

@@ -20,8 +20,9 @@ public class TransactionManager implements MessageTypes
 
     static final ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     static int transactionCounter = 0;
+	static boolean applyLocking = false;
 
-    public TransactionManager() {}
+    public TransactionManager(boolean applyLocking) {this.applyLocking = applyLocking;}
 
     public ArrayList<Transaction> getTransactions()
     {
@@ -117,7 +118,7 @@ public class TransactionManager implements MessageTypes
                 // get the content of the message
                 accountNumber = (Integer) message.getContent();
                 // read the balance from the acccount manager
-                balance = TransactionServer.accountMgr.readBalance(accountNumber, transaction);
+                balance = TransactionServer.accountMgr.readBalance(accountNumber, transaction, applyLocking);
                 try
                 {
                   // the the balance
@@ -141,7 +142,7 @@ public class TransactionManager implements MessageTypes
                 // read the balance from content
                 balance = content[1];
                 // get balancefrom the account
-                balance = TransactionServer.accountMgr.writeBalance(accountNumber, transaction, balance);
+                balance = TransactionServer.accountMgr.writeBalance(accountNumber, transaction, balance, applyLocking);
 
                 try
                 {
