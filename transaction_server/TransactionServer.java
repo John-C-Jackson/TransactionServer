@@ -53,8 +53,11 @@ public class TransactionServer extends Thread
 
       try
 	  {
-	     int portNum = Integer.parseInt(serverProps.getProperty("PORT"));
+      // grabs the port number from Properties
+	    int portNum = Integer.parseInt(serverProps.getProperty("PORT"));
+      // creates the server socket
 		 serverSocket = new ServerSocket(portNum);
+     
 		 System.out.println("[TransactionServer] ServerSocket created");
 	  }
 	  catch (IOException ex)

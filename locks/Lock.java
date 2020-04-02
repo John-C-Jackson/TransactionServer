@@ -11,7 +11,9 @@ public class Lock implements LockTypes
 
     private final Account account;                          // object being protected by lock
     private final ArrayList<Transaction> holders;         // Transactions holding the object
+    private LockType currentLockType;
     private LockType lockType;
+
 
 
     public Lock(Account account)
@@ -42,12 +44,12 @@ public class Lock implements LockTypes
         // if no other transactions, hold lock
         if(holders.isEmpty()) {
             holders.add(trans);
-            this.lockType = lockType;
+            this.currentLockType = lockType;
             trans.addLock(this);
 			trans.log("[Lock.acquire] set " + lockType.typeToString() + " on account number " + account.getAccountNumber());
 		}
         // if another transaction has a read lock, share it
-        else if(this.lockType.getType() == READ_LOCK && !isHolder(trans))
+        else if(!holders.contains(trans))
         {
             holders.add(trans);
             trans.addLock(this);
@@ -55,15 +57,17 @@ public class Lock implements LockTypes
         }
         // if this transaction is a holder but needs a more exclusive lock
         // TO-DO: This probably needs a stronger condition
-        else if (holders.size() == 1 && this.lockType.getType() == READ_LOCK && lockType.getType() == WRITE_LOCK)
+        else if (holders.size() == 1 && currentLockType.getType() == READ_LOCK && lockType.getType() == WRITE_LOCK)
         {
 			trans.log("[Lock.acquire] promote " + this.lockType.typeToString() + " to " + lockType.typeToString() + " on account " + account.getAccountNumber());
-            this.lockType.promote();
+        //    this.lockType.promote();
+        this.currentLockType = lockType;
+
         }
-		else
-		{
-			trans.log("[Lock.acquire] ignore setting " + this.lockType.typeToString() + " to " + lockType.typeToString()  + " on account " + account.getAccountNumber());
-		}
+  		else
+  		{
+  			trans.log("[Lock.acquire] ignore setting " + this.lockType.typeToString() + " to " + lockType.typeToString()  + " on account " + account.getAccountNumber());
+  		}
     }
 
     public synchronized void release(Transaction trans)
@@ -80,7 +84,6 @@ public class Lock implements LockTypes
         notifyAll();
     }
 
-    // TO-DO: implement this function
     public boolean isConflict(Transaction trans, LockType type)
     {
         if (holders.isEmpty())
@@ -95,6 +98,17 @@ public class Lock implements LockTypes
 			trans.log("[Lock.isConflict] current Lock: " + this.lockType.typeToString() + " on account number " + account.getAccountNumber() + " does not conflict with " + type.typeToString());
             return false;
         }
+        else if ( this.currentLockType.getType()  == READ_LOCK && type.getType()  == READ_LOCK)
+        {
+          return false;
+        }
+        else
+        {
+          trans.log("[Lock.isConflict] | current lock :  " + currentLockType.typeToString() + " hold by transaction");
+          return true;
+        }
+
+/*
         else if (this.lockType.getType() == WRITE_LOCK)
         {
             // if there is a write lock already, then theres a conflict.
@@ -103,6 +117,9 @@ public class Lock implements LockTypes
         }
 		trans.log("[Lock.isConflict] current Lock: " + this.lockType.typeToString() + " on account number " + account.getAccountNumber() + " does not conflict with " + type.typeToString());
         return false;
+
+
+**/
     }
 
     public boolean isHolder(Transaction trans)
